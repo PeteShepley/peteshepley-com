@@ -1,0 +1,55 @@
+---
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+];
+---
+
+<header>
+  <nav>
+    <a class="site-name" href="/">Pete Shepley</a>
+    <div class="links">
+      {navItems.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+    </div>
+  </nav>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  nav {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .site-name {
+    font-weight: 600;
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .links {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  .links a {
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    color: var(--color-accent);
+  }
+</style>

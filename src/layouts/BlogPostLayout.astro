@@ -1,0 +1,60 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags?: string[];
+}
+
+const { title, description, pubDate, updatedDate, tags = [] } = Astro.props;
+
+const dateFormat: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+---
+
+<Layout title={title} description={description}>
+  <article>
+    <header class="post-header">
+      <h1>{title}</h1>
+      <p class="muted post-meta">
+        <time datetime={pubDate.toISOString()}>{pubDate.toLocaleDateString('en-US', dateFormat)}</time>
+        {updatedDate && (
+          <span> · updated <time datetime={updatedDate.toISOString()}>{updatedDate.toLocaleDateString('en-US', dateFormat)}</time></span>
+        )}
+        {tags.length > 0 && <span> · {tags.join(', ')}</span>}
+      </p>
+    </header>
+    <div class="post-content">
+      <slot />
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .post-header h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .post-meta {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .post-content :global(h2) {
+    margin-top: 2.5rem;
+  }
+
+  .post-content :global(h3) {
+    margin-top: 2rem;
+  }
+
+  .post-content :global(p) {
+    margin: 1.25rem 0;
+  }
+</style>

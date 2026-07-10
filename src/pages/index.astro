@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { projects } from '../data/projects';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const featuredProjects = projects.slice(0, 2);
+---
+
+<Layout>
+  <section>
+    <h1>Hi, I'm Pete Shepley.</h1>
+    <p>
+      I'm a software engineer. This is where I write about what I'm building — projects,
+      infrastructure, and whatever I'm currently digging into.
+    </p>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <ul class="plain-list">
+      {featuredProjects.map((project) => (
+        <li>
+          <a href={project.url}>{project.name}</a>
+          <p class="muted">{project.description}</p>
+        </li>
+      ))}
+    </ul>
+    <p><a href="/projects">All projects &rarr;</a></p>
+  </section>
+
+  <section>
+    <h2>Recent posts</h2>
+    <ul class="plain-list">
+      {posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+          <p class="muted">{post.data.description}</p>
+        </li>
+      ))}
+    </ul>
+    <p><a href="/blog">All posts &rarr;</a></p>
+  </section>
+</Layout>
+
+<style>
+  section {
+    margin: 2.5rem 0;
+  }
+
+  section:first-child {
+    margin-top: 1rem;
+  }
+
+  .plain-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+  }
+
+  .plain-list li {
+    margin-bottom: 1.25rem;
+  }
+
+  .plain-list p {
+    margin: 0.25rem 0 0;
+  }
+</style>

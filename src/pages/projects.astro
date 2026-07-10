@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { projects } from '../data/projects';
+---
+
+<Layout title="Projects" description="Projects Pete Shepley is working on.">
+  <h1>Projects</h1>
+  <p class="muted">Things I'm building or have built. Some are finished, some are ongoing.</p>
+
+  <ul class="project-list">
+    {projects.map((project) => (
+      <li>
+        <h2><a href={project.url}>{project.name}</a></h2>
+        <p>{project.description}</p>
+        <p class="tags muted">{project.tags.join(' · ')}</p>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  .project-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .project-list li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .project-list li:last-child {
+    border-bottom: none;
+  }
+
+  .project-list h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.1rem;
+  }
+
+  .project-list p {
+    margin: 0.4rem 0;
+  }
+
+  .tags {
+    font-size: 0.85rem;
+  }
+</style>
