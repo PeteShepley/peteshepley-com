@@ -30,12 +30,5 @@ properties does the job.
 
 The project is deployed to infrastructure managed by an OpenTofu stack managed
 in a separate repository. The infrastructure involved is an AWS CloudFront
-distribution backed by a secured S3 bucket. This project deploys to the 
-One gap surfaced while wiring this up: CloudFront was serving the S3 bucket
-directly through Origin Access Control (not S3 website-hosting mode), which
-means only the literal root path resolves `index.html` automatically. Astro's
-default per-page output is a directory with an `index.html` inside it — so
-`/blog/building-peteshepley-com/` had no matching object key. The fix is a
-small CloudFront Function that rewrites extensionless request paths to their
-`index.html` before they hit the origin — the standard pattern for static
-sites behind CloudFront+OAC.
+distribution backed by a secured S3 bucket. This project deploys to the bucket
+using a Github Action.
