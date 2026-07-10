@@ -28,11 +28,9 @@ properties does the job.
 
 ## Deployment
 
-The site deploys to infrastructure already defined in `operations/infra/002-static-site`:
-an S3 bucket behind CloudFront, with a GitHub Actions OIDC role so no long-lived
-AWS credentials are stored anywhere. Push to `main`, GitHub Actions builds the
-site, syncs `dist/` to S3, and invalidates the CloudFront cache.
-
+The project is deployed to infrastructure managed by an OpenTofu stack managed
+in a separate repository. The infrastructure involved is an AWS CloudFront
+distribution backed by a secured S3 bucket. This project deploys to the 
 One gap surfaced while wiring this up: CloudFront was serving the S3 bucket
 directly through Origin Access Control (not S3 website-hosting mode), which
 means only the literal root path resolves `index.html` automatically. Astro's
@@ -41,10 +39,3 @@ default per-page output is a directory with an `index.html` inside it — so
 small CloudFront Function that rewrites extensionless request paths to their
 `index.html` before they hit the origin — the standard pattern for static
 sites behind CloudFront+OAC.
-
-## What's next
-
-- A real custom domain (the `dns` stack in `operations` doesn't exist yet —
-  until then this is reachable on the CloudFront default domain)
-- More projects on the `/projects` page as they're worth linking
-- Whatever I end up building next
