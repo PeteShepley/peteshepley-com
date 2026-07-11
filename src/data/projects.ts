@@ -43,4 +43,10 @@ export const projects: Project[] = [
     url: 'https://peteshepley.com/api-docs/ledger-api.html',
     tags: ['typescript', 'aws-lambda', 'postgres'],
   },
+  {
+    name: 'Books API',
+    description: 'A shared, Clerk-Organization-backed financial ledger ("Book") — typed expense/income/transfer transactions over a chart of accounts, with ledger-api as the double-entry backend. Go on AWS Lambda, DynamoDB, and API Gateway, authenticated with Clerk (organization claims).',
+    url: 'https://peteshepley.com/api-docs/books-api.html',
+    tags: ['go', 'aws-lambda', 'dynamodb'],
+  },
 ];
