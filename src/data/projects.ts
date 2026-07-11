@@ -19,4 +19,22 @@ export const projects: Project[] = [
     url: 'https://github.com/PeteShepley/peteshepley-com',
     tags: ['astro', 'aws', 'opentofu'],
   },
+  {
+    name: 'Resume API',
+    description: 'An API for resume-shaped data — profile, work experience, education, skills, certifications, hobbies, and goals — served back as JSON or Markdown. Python on AWS Lambda, DynamoDB, and API Gateway, authenticated with Clerk.',
+    url: 'https://peteshepley.com/api-docs/resume-api.html',
+    tags: ['python', 'aws-lambda', 'dynamodb'],
+  },
+  {
+    name: 'Resume App',
+    description: 'A signed-in editor for resume-api data — view your assembled resume and edit every section: profile, experience, education, skills, certifications, hobbies, and goals. React, TypeScript, and Vite, authenticated with Clerk.',
+    url: 'https://resume.peteshepley.com',
+    tags: ['react', 'typescript', 'clerk'],
+  },
+  {
+    name: 'API Console',
+    description: "A signed-in API test console for peteshepley.com's APIs — pick an API from the dropdown, browse its OpenAPI documentation, and try live requests against your own data. React, TypeScript, and Vite, authenticated with Clerk.",
+    url: 'https://test.peteshepley.com',
+    tags: ['react', 'typescript', 'swagger-ui'],
+  },
 ];
