@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import apis from '../../data/apis.json';
+---
+
+<Layout
+  title="API Documentation"
+  description="OpenAPI documentation for peteshepley.com's APIs."
+>
+  <h1>API Documentation</h1>
+  <p class="muted">
+    Reference docs for the APIs behind peteshepley.com, generated from each API's
+    OpenAPI spec. To try requests interactively against your own data, sign in at{' '}
+    <a href="https://test.peteshepley.com">test.peteshepley.com</a>.
+  </p>
+
+  <ul class="api-list">
+    {apis.map((api) => (
+      <li>
+        <h2><a href={`/api-docs/${api.id}.html`}>{api.name}</a></h2>
+        <p>{api.description}</p>
+        <p class="links muted">
+          <a href={`/api-docs/${api.id}.html`}>Documentation</a>
+          {' · '}
+          <a href={`/api-docs/${api.id}.yaml`}>Download OpenAPI spec</a>
+          {' · '}
+          <a href={api.repoUrl}>Source</a>
+        </p>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  .api-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .api-list li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .api-list li:last-child {
+    border-bottom: none;
+  }
+
+  .api-list h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.1rem;
+  }
+
+  .api-list p {
+    margin: 0.4rem 0;
+  }
+
+  .links {
+    font-size: 0.9rem;
+  }
+</style>

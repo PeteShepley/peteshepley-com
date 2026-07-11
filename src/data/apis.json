@@ -1,0 +1,10 @@
+[
+  {
+    "id": "resume-api",
+    "name": "Resume API",
+    "description": "Profile, work experience, education, skills, certifications, hobbies, and goals — served as JSON or Markdown, scoped to your own Clerk identity.",
+    "repoUrl": "https://github.com/PeteShepley/resume-api",
+    "specSourceUrl": "https://raw.githubusercontent.com/PeteShepley/resume-api/main/openapi/resume-api.yaml",
+    "localSourcePath": "../resume-api/openapi/resume-api.yaml"
+  }
+]

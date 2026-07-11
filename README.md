@@ -18,27 +18,33 @@ src/
     index.astro     landing page
     projects.astro  project list, sourced from src/data/projects.ts
     blog/           post index + [...slug] post route
+    api-docs/       API documentation index, sourced from src/data/apis.json
     rss.xml.ts      RSS feed
     404.astro       matches CloudFront's custom_error_response -> /404.html
   content/blog/     blog posts (markdown)
   content.config.ts blog collection schema
   data/projects.ts  project entries shown on /projects
+  data/apis.json    API registry shown on /api-docs
   styles/global.css theme (CSS custom properties, light/dark)
+scripts/
+  fetch-openapi-specs.mjs  pulls each API's OpenAPI spec + renders static
+                            Redoc HTML into public/api-docs/ (runs before
+                            dev/build — see package.json pre* scripts)
 ```
 
 ## Commands
 
-| Command         | Action                                      |
-| :--------------- | :------------------------------------------ |
-| `npm install`     | Install dependencies                         |
-| `npm run dev`      | Start dev server at `localhost:4321`         |
-| `npm run build`    | Build production site to `./dist/`           |
-| `npm run preview`  | Preview the production build locally         |
-| `npm run check`    | Type-check (`astro check`)                    |
+| Command           | Action                               |
+|:------------------|:-------------------------------------|
+| `npm install`     | Install dependencies                 |
+| `npm run dev`     | Start dev server at `localhost:4321` |
+| `npm run build`   | Build production site to `./dist/`   |
+| `npm run preview` | Preview the production build locally |
+| `npm run check`   | Type-check (`astro check`)           |
 
 ## Adding a blog post
 
-Create a markdown file in `src/content/blog/`:
+Create a Markdown file in `src/content/blog/`:
 
 ```md
 ---
@@ -48,7 +54,7 @@ pubDate: 2026-07-10
 tags: ["tag1", "tag2"]
 ---
 
-Body in markdown.
+Body in Markdown.
 ```
 
 Set `draft: true` in the frontmatter to keep a post out of the index, RSS
@@ -58,6 +64,25 @@ feed, and homepage until it's ready.
 
 Add an entry to the `projects` array in `src/data/projects.ts`.
 
+## Publishing API documentation
+
+`/api-docs` lists every API registered in `src/data/apis.json`. Each entry
+points at the API's own repo as the source of truth for its OpenAPI spec
+(`specSourceUrl`, a raw GitHub URL on `main`) and, for local development,
+a sibling checkout path (`localSourcePath`) so docs stay in sync without a
+network round trip while working in this workspace.
+
+To add a new API:
+
+1. Publish an `openapi/<name>.yaml` in that API's own repo.
+2. Add an entry to `src/data/apis.json`.
+3. `npm run docs:build` (or just `dev`/`build`, which run it automatically)
+   fetches the spec into `public/api-docs/<id>.yaml` and renders
+   `public/api-docs/<id>.html` with [Redocly](https://redocly.com/redoc).
+
+Neither generated file is committed — `public/api-docs/` is gitignored and
+rebuilt on every `dev`/`build`/deploy.
+
 ## Deployment
 
 Deploys via GitHub Actions on every push to `main` (`.github/workflows/deploy.yml`):
@@ -65,14 +90,14 @@ build the site, sync `dist/` to the `peteshepley-com-site` S3 bucket, invalidate
 CloudFront. Authentication is via GitHub OIDC (no stored AWS credentials) —
 the role and bucket are provisioned in `operations/infra/002-static-site`.
 Pull requests run `.github/workflows/ci.yml` (type-check + build) without
-touching any deploy credentials.
+touching any deployment credentials.
 
 Required repo configuration (see `operations/docs/runbooks/static-site-deployment.md`
 for how to get these values):
 
-| Name | Kind | Value |
-| :--- | :--- | :--- |
-| `AWS_ROLE_ARN` | Actions secret | `tofu output github_deploy_role_arn` in `operations/infra/002-static-site` |
+| Name                         | Kind             | Value                                                                          |
+|:-----------------------------|:-----------------|:-------------------------------------------------------------------------------|
+| `AWS_ROLE_ARN`               | Actions secret   | `tofu output github_deploy_role_arn` in `operations/infra/002-static-site`     |
 | `CLOUDFRONT_DISTRIBUTION_ID` | Actions variable | `tofu output cloudfront_distribution_id` in `operations/infra/002-static-site` |
 
 The site is reachable at the CloudFront default domain
