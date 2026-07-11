@@ -49,4 +49,10 @@ export const projects: Project[] = [
     url: 'https://peteshepley.com/api-docs/books-api.html',
     tags: ['go', 'aws-lambda', 'dynamodb'],
   },
+  {
+    name: 'Books App',
+    description: "A signed-in editor for a shared Book — record expenses, income, and transfers against a chart of accounts, without ever thinking in double-entry debits and credits. Every Book is a Clerk Organization, so switching Books means switching who you're signed in as. React, TypeScript, and Vite, authenticated with Clerk.",
+    url: 'https://books.peteshepley.com',
+    tags: ['react', 'typescript', 'clerk'],
+  },
 ];
