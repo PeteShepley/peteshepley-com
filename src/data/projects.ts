@@ -37,4 +37,10 @@ export const projects: Project[] = [
     url: 'https://test.peteshepley.com',
     tags: ['react', 'typescript', 'swagger-ui'],
   },
+  {
+    name: 'Ledger API',
+    description: 'A double-entry bookkeeping API — accounts, transactions, and the immutable entries that belong to them, with derived balances and idempotent posting. TypeScript on AWS Lambda, Aurora Serverless v2 (Postgres) via the RDS Data API, IAM-authenticated API Gateway.',
+    url: 'https://peteshepley.com/api-docs/ledger-api.html',
+    tags: ['typescript', 'aws-lambda', 'postgres'],
+  },
 ];

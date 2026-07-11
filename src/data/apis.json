@@ -6,5 +6,13 @@
     "repoUrl": "https://github.com/PeteShepley/resume-api",
     "specSourceUrl": "https://raw.githubusercontent.com/PeteShepley/resume-api/main/openapi/resume-api.yaml",
     "localSourcePath": "../resume-api/openapi/resume-api.yaml"
+  },
+  {
+    "id": "ledger-api",
+    "name": "Ledger API",
+    "description": "Double-entry bookkeeping — accounts, transactions, and immutable entries, with derived balances and idempotent posting. IAM-authenticated (SigV4), meant for other services to call rather than end users directly.",
+    "repoUrl": "https://github.com/PeteShepley/ledger-api",
+    "specSourceUrl": "https://raw.githubusercontent.com/PeteShepley/ledger-api/main/openapi/ledger-api.yaml",
+    "localSourcePath": "../ledger-api/openapi/ledger-api.yaml"
   }
 ]
