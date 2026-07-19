@@ -6,21 +6,5 @@
     "repoUrl": "https://github.com/PeteShepley/resume-api",
     "specSourceUrl": "https://raw.githubusercontent.com/PeteShepley/resume-api/main/openapi/resume-api.yaml",
     "localSourcePath": "../resume-api/openapi/resume-api.yaml"
-  },
-  {
-    "id": "ledger-api",
-    "name": "Ledger API",
-    "description": "Double-entry bookkeeping — accounts, transactions, and immutable entries, with derived balances and idempotent posting. IAM-authenticated (SigV4), meant for other services to call rather than end users directly.",
-    "repoUrl": "https://github.com/PeteShepley/ledger-api",
-    "specSourceUrl": "https://raw.githubusercontent.com/PeteShepley/ledger-api/main/openapi/ledger-api.yaml",
-    "localSourcePath": "../ledger-api/openapi/ledger-api.yaml"
-  },
-  {
-    "id": "books-api",
-    "name": "Books API",
-    "description": "Shared, Clerk-Organization-backed financial ledgers (\"Books\") — typed expense/income/transfer transactions posted into a ledger-api-backed chart of accounts, scoped to your active Clerk organization.",
-    "repoUrl": "https://github.com/PeteShepley/books-api",
-    "specSourceUrl": "https://raw.githubusercontent.com/PeteShepley/books-api/main/openapi/books-api.yaml",
-    "localSourcePath": "../books-api/openapi/books-api.yaml"
   }
 ]
