@@ -88,18 +88,20 @@ rebuilt on every `dev`/`build`/deploy.
 Deploys via GitHub Actions on every push to `main` (`.github/workflows/deploy.yml`):
 build the site, sync `dist/` to the `peteshepley-com-site` S3 bucket, invalidate
 CloudFront. Authentication is via GitHub OIDC (no stored AWS credentials) —
-the role and bucket are provisioned in `operations/infra/002-static-site`.
-Pull requests run `.github/workflows/ci.yml` (type-check + build) without
-touching any deployment credentials.
+the role and bucket are provisioned in [`infrastructure/`](infrastructure/),
+this repo's own OpenTofu stack. The account-wide OIDC provider it trusts is
+owned centrally in `operations/infra/005-github-oidc`, looked up via data
+source rather than created here. Pull requests run `.github/workflows/ci.yml`
+(type-check + build) without touching any deployment credentials.
 
 Required repo configuration (see `operations/docs/runbooks/static-site-deployment.md`
 for how to get these values):
 
-| Name                         | Kind             | Value                                                                          |
-|:-----------------------------|:-----------------|:-------------------------------------------------------------------------------|
-| `AWS_ROLE_ARN`               | Actions secret   | `tofu output github_deploy_role_arn` in `operations/infra/002-static-site`     |
-| `CLOUDFRONT_DISTRIBUTION_ID` | Actions variable | `tofu output cloudfront_distribution_id` in `operations/infra/002-static-site` |
+| Name                         | Kind             | Value                                                       |
+|:-----------------------------|:-----------------|:---------------------------------------------------------------|
+| `AWS_ROLE_ARN`               | Actions secret   | `tofu output github_deploy_role_arn` in `infrastructure/`     |
+| `CLOUDFRONT_DISTRIBUTION_ID` | Actions variable | `tofu output cloudfront_distribution_id` in `infrastructure/` |
 
 The site is reachable at the CloudFront default domain
-(`tofu output cloudfront_domain_name`) until the `operations/infra/dns` stack
-exists and a custom domain is attached.
+(`tofu output cloudfront_domain_name`) until the `operations/infra/003-root-dns`
+stack exists and a custom domain is attached.

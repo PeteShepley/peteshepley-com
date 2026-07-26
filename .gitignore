@@ -23,3 +23,5 @@ npm-debug.log*
 # editors
 .idea/
 .vscode/
+
+.teraform/
