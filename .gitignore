@@ -24,4 +24,4 @@ npm-debug.log*
 .idea/
 .vscode/
 
-.teraform/
+.terraform/

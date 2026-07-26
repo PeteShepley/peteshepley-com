@@ -11,15 +11,15 @@ variable "site_bucket_name" {
 }
 
 variable "domain_name" {
-  description = "Custom domain aliased to this distribution — cert and DNS records for it are managed in infra/003-dns"
+  description = "Custom domain aliased to this distribution — cert and DNS records for it are managed in infra/003-root-dns"
   type        = string
   default     = "peteshepley.com"
 }
 
-variable "github_owner" {
-  description = "GitHub organization or user that owns the repositories managed in this stack"
+variable "root_domain_name" {
+  description = "Root domain whose wildcard ACM cert (managed in operations/infra/003-root-dns) covers domain_name — same as domain_name here, since peteshepley.com is itself the apex"
   type        = string
-  default     = "PeteShepley"
+  default     = "peteshepley.com"
 }
 
 variable "github_repo" {

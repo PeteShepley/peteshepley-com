@@ -6,10 +6,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
   }
 
   backend "s3" {
@@ -23,96 +19,6 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-}
-
-# --- S3 bucket ---
-
-resource "aws_s3_bucket" "site" {
-  bucket = var.site_bucket_name
-}
-
-resource "aws_s3_bucket_versioning" "site" {
-  bucket = aws_s3_bucket.site.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "site" {
-  bucket = aws_s3_bucket.site.id
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "site" {
-  bucket = aws_s3_bucket.site.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-# Bucket policy is set after CloudFront exists so we can scope it to the distribution ARN.
-resource "aws_s3_bucket_policy" "site" {
-  bucket = aws_s3_bucket.site.id
-  policy = data.aws_iam_policy_document.site_bucket.json
-}
-
-data "aws_iam_policy_document" "site_bucket" {
-  statement {
-    sid    = "AllowCloudFrontOAC"
-    effect = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["cloudfront.amazonaws.com"]
-    }
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.site.arn}/*"]
-    condition {
-      test     = "StringEquals"
-      variable = "AWS:SourceArn"
-      values   = [aws_cloudfront_distribution.site.arn]
-    }
-  }
-}
-
-# --- CloudFront ---
-
-data "aws_cloudfront_cache_policy" "caching_optimized" {
-  name = "Managed-CachingOptimized"
-}
-
-# Managed in infra/003-dns, not here — looked up by domain rather than
-# passed in as a variable/remote state output, matching the pattern used for
-# the GitHub OIDC provider (see docs/runbooks/static-site-deployment.md).
-data "aws_acm_certificate" "site" {
-  domain      = var.domain_name
-  statuses    = ["ISSUED"]
-  types       = ["AMAZON_ISSUED"]
-  most_recent = true
-}
-
-# The S3 origin above is REST (via OAC), not S3 website-hosting, so only the
-# literal root path resolves index.html automatically. This function rewrites
-# extensionless request URIs (e.g. Astro's per-page /blog/my-post/ output) to
-# their index.html before they reach the origin.
-resource "aws_cloudfront_function" "url_rewrite" {
-  name    = "${var.site_bucket_name}-url-rewrite"
-  runtime = "cloudfront-js-2.0"
-  comment = "Rewrite extensionless URIs to their index.html"
-  publish = true
-  code    = file("${path.module}/cloudfront-functions/url-rewrite.js")
-}
-
-resource "aws_cloudfront_origin_access_control" "site" {
-  name                              = "${var.site_bucket_name}-oac"
-  origin_access_control_origin_type = "s3"
-  signing_behavior                  = "always"
-  signing_protocol                  = "sigv4"
 }
 
 # /api-docs/* (the published OpenAPI specs + rendered Redoc HTML) is fetched
@@ -143,70 +49,43 @@ resource "aws_cloudfront_response_headers_policy" "api_docs_cors" {
   }
 }
 
-resource "aws_cloudfront_distribution" "site" {
-  enabled             = true
-  default_root_object = "index.html"
-  price_class         = "PriceClass_100"
-  comment             = "peteshepley.com static site"
-  aliases             = [var.domain_name, "www.${var.domain_name}"]
+# --- Static app (S3 + CloudFront + GitHub OIDC deploy role) ---
+# peteshepley.com is an Astro multi-page site, not a Vite SPA, so it uses
+# the module's non-default options: a viewer-request rewrite function
+# (Astro's extensionless per-page URIs -> their index.html), a real 404
+# page instead of an SPA fallback, the apex + www aliases, and an extra
+# cache behavior for /api-docs/*'s CORS policy above. See
+# github.com/PeteShepley/terraform-aws-static-app for what's common and
+# why, and its README for what each of these variables does.
+module "app" {
+  source = "github.com/PeteShepley/terraform-aws-static-app"
 
-  origin {
-    domain_name              = aws_s3_bucket.site.bucket_regional_domain_name
-    origin_id                = "s3-site"
-    origin_access_control_id = aws_cloudfront_origin_access_control.site.id
-  }
+  # Keeps the existing github-deploy-static-site role name (predates the
+  # app_name-per-stack convention) — do not change to "peteshepley-com",
+  # that would force-replace the IAM role and break the deploy pipeline
+  # until AWS_ROLE_ARN is re-wired.
+  app_name             = "static-site"
+  site_bucket_name     = var.site_bucket_name
+  domain_name          = var.domain_name
+  root_domain_name     = var.root_domain_name
+  distribution_comment = "peteshepley.com static site"
+  github_repo          = var.github_repo
 
-  default_cache_behavior {
-    target_origin_id       = "s3-site"
-    viewer_protocol_policy = "redirect-to-https"
-    compress               = true
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
+  extra_aliases = ["www.${var.domain_name}"]
 
-    function_association {
-      event_type   = "viewer-request"
-      function_arn = aws_cloudfront_function.url_rewrite.arn
+  # Keeps the existing peteshepley-com-site-url-rewrite function name —
+  # the module's own default suffix ("-viewer-request") would force a
+  # destroy/recreate of this ForceNew resource for no functional reason.
+  viewer_request_function_code = file("${path.module}/cloudfront-functions/url-rewrite.js")
+  viewer_request_function_name = "${var.site_bucket_name}-url-rewrite"
+
+  extra_ordered_cache_behaviors = [
+    {
+      path_pattern               = "/api-docs/*"
+      response_headers_policy_id = aws_cloudfront_response_headers_policy.api_docs_cors.id
     }
-  }
+  ]
 
-  ordered_cache_behavior {
-    path_pattern               = "/api-docs/*"
-    target_origin_id           = "s3-site"
-    viewer_protocol_policy     = "redirect-to-https"
-    compress                   = true
-    allowed_methods            = ["GET", "HEAD"]
-    cached_methods             = ["GET", "HEAD"]
-    cache_policy_id            = data.aws_cloudfront_cache_policy.caching_optimized.id
-    response_headers_policy_id = aws_cloudfront_response_headers_policy.api_docs_cors.id
-
-    function_association {
-      event_type   = "viewer-request"
-      function_arn = aws_cloudfront_function.url_rewrite.arn
-    }
-  }
-
-  custom_error_response {
-    error_code         = 403
-    response_code      = 404
-    response_page_path = "/404.html"
-  }
-
-  custom_error_response {
-    error_code         = 404
-    response_code      = 404
-    response_page_path = "/404.html"
-  }
-
-  restrictions {
-    geo_restriction {
-      restriction_type = "none"
-    }
-  }
-
-  viewer_certificate {
-    acm_certificate_arn      = data.aws_acm_certificate.site.arn
-    ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.2_2021"
-  }
+  spa_fallback    = false
+  error_page_path = "/404.html"
 }
