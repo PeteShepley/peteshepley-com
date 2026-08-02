@@ -21,6 +21,18 @@ provider "aws" {
   region = var.aws_region
 }
 
+# The consolidated per-repo GitHub OIDC deploy role (gha-deploy-peteshepley-com),
+# created in operations/infra/002-github-projects. Passed into the module below
+# as deploy_role_name so its own deploy policy attaches there instead of
+# creating its own role.
+data "aws_ssm_parameter" "deploy_role_name" {
+  name = "/github-deploy/peteshepley-com/role-name"
+}
+
+data "aws_ssm_parameter" "deploy_role_arn" {
+  name = "/github-deploy/peteshepley-com/role-arn"
+}
+
 # /api-docs/* (the published OpenAPI specs + rendered Redoc HTML) is fetched
 # cross-origin by api-console (test.peteshepley.com) via Swagger UI's `url`
 # prop — a plain unauthenticated GET, no cookies/credentials involved. The
@@ -60,16 +72,19 @@ resource "aws_cloudfront_response_headers_policy" "api_docs_cors" {
 module "app" {
   source = "github.com/PeteShepley/terraform-aws-static-app"
 
-  # Keeps the existing github-deploy-static-site role name (predates the
-  # app_name-per-stack convention) — do not change to "peteshepley-com",
-  # that would force-replace the IAM role and break the deploy pipeline
-  # until AWS_ROLE_ARN is re-wired.
+  # app_name now only names the inline policy attached to the externally
+  # created role below (create_deploy_role = false) — changing it renames
+  # that policy, not the role, so it's no longer the force-replace hazard
+  # the previous version of this comment warned about.
   app_name             = "static-site"
   site_bucket_name     = var.site_bucket_name
   domain_name          = var.domain_name
   root_domain_name     = var.root_domain_name
   distribution_comment = "peteshepley.com static site"
   github_repo          = var.github_repo
+
+  create_deploy_role = false
+  deploy_role_name   = data.aws_ssm_parameter.deploy_role_name.value
 
   extra_aliases = ["www.${var.domain_name}"]
 

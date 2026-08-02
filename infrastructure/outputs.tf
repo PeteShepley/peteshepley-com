@@ -30,5 +30,6 @@ output "cloudfront_hosted_zone_id" {
 
 output "github_deploy_role_arn" {
   description = "ARN for the GitHub Actions deploy role — set this as AWS_ROLE_ARN in the repo's Actions secrets"
-  value       = module.app.github_deploy_role_arn
+  sensitive   = true
+  value       = data.aws_ssm_parameter.deploy_role_arn.value
 }
