@@ -1,0 +1,43 @@
+name: Release
+
+# Build the Astro site and publish it as a GitHub Release. Deployment happens
+# separately, from the operations repo: `scripts/deploy root site <env> <tag>`.
+# prod and stage get the same build.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency: release-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Package
+        run: |
+          tar -czf dist.tgz -C dist .
+          jq -n --arg sha "$GITHUB_SHA" \
+            '{type:"static", mode:"directory", commit:$sha}' > manifest.json
+
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v0.${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" dist.tgz manifest.json \
+            --title "$TAG" \
+            --notes "Build of ${GITHUB_SHA:0:7} for peteshepley.com"
