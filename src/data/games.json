@@ -1,0 +1,10 @@
+[
+  {
+    "id": "gin-rummy",
+    "name": "Gin Rummy",
+    "description": "A classic two-player card game where players aim to form sets and runs of cards in their hand. Players draw and discard cards, trying to arrange their hand into matching sets (three or four cards of the same rank) or runs (three or more consecutive cards of the same suit). The round ends when a player 'knocks' with 10 or fewer deadwood points, or goes 'gin' with zero deadwood. Score is based on the difference in deadwood between players.",
+    "players": "2 players",
+    "url": "https://game.peteshepley.com/gin-rummy/",
+    "repoUrl": "https://github.com/PeteShepley/gin-rummy-app"
+  }
+]
