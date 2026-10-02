@@ -22,5 +22,13 @@
     "players": "4 players",
     "url": "https://game.peteshepley.com/hearts/",
     "repoUrl": "https://github.com/PeteShepley/card-games/tree/main/games/hearts"
+  },
+  {
+    "id": "spades",
+    "name": "Spades",
+    "description": "Partnership Spades for four: you and the player across from you bid how many tricks you'll take, spades always trump, and the score rewards making your contract exactly — overtricks pile up as bags, and ten bags cost a hundred. Bid nil to bet you'll take none. First partnership to 500 wins.",
+    "players": "4 players, 2 teams",
+    "url": "https://game.peteshepley.com/spades/",
+    "repoUrl": "https://github.com/PeteShepley/card-games/tree/main/games/spades"
   }
 ]

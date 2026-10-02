@@ -65,6 +65,14 @@ export const projects: Project[] = [
     howToExamine: 'Create a room and share the code with three friends; the game starts when the fourth joins.',
   },
   {
+    name: 'Spades',
+    kind: 'code',
+    description: 'Partnership Spades with bidding, nil, bags and games to 500 — the second trick-taking game on the shared card kit, reusing the same trick primitives and four-seat table as Hearts.',
+    url: 'https://game.peteshepley.com/spades/',
+    tags: ['typescript', 'react', 'websockets'],
+    howToExamine: 'Gather four players in a room; the first and third to join are partners against the second and fourth.',
+  },
+  {
     name: 'API Console',
     kind: 'code',
     description: "A signed-in API test console for peteshepley.com's APIs — pick an API from the dropdown, browse its OpenAPI documentation, and try live requests against your own data. React, TypeScript, and Vite, authenticated with Clerk.",
