@@ -49,6 +49,14 @@ export const projects: Project[] = [
     howToExamine: 'Create a room and send the code to a friend, or play both seats in one browser.',
   },
   {
+    name: 'Crazy Eights',
+    kind: 'code',
+    description: 'Crazy Eights for two to six players, built on a shared card kit and the same WebSocket relay as Gin Rummy — the relay sequences moves for any game without knowing its rules.',
+    url: 'https://game.peteshepley.com/crazy-eights/',
+    tags: ['typescript', 'react', 'websockets'],
+    howToExamine: 'Create a room, share the code with up to five friends, and start once everyone is in.',
+  },
+  {
     name: 'API Console',
     kind: 'code',
     description: "A signed-in API test console for peteshepley.com's APIs — pick an API from the dropdown, browse its OpenAPI documentation, and try live requests against your own data. React, TypeScript, and Vite, authenticated with Clerk.",
