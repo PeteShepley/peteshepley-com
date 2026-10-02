@@ -14,5 +14,13 @@
     "players": "2–6 players",
     "url": "https://game.peteshepley.com/crazy-eights/",
     "repoUrl": "https://github.com/PeteShepley/card-games/tree/main/games/crazy-eights"
+  },
+  {
+    "id": "hearts",
+    "name": "Hearts",
+    "description": "The four-player trick-taking classic: avoid hearts (a point each) and the queen of spades (13), pass three cards before each hand, and if you're brave, take every point to shoot the moon and stick everyone else with 26. First to 100 loses; lowest score wins.",
+    "players": "4 players",
+    "url": "https://game.peteshepley.com/hearts/",
+    "repoUrl": "https://github.com/PeteShepley/card-games/tree/main/games/hearts"
   }
 ]
