@@ -57,6 +57,14 @@ export const projects: Project[] = [
     howToExamine: 'Create a room, share the code with up to five friends, and start once everyone is in.',
   },
   {
+    name: 'Hearts',
+    kind: 'code',
+    description: 'Four-player Hearts on the same card kit and relay: passing, follow-suit trick play, moon shots and games to 100, all driven by a pure engine that every client replays from the same seed.',
+    url: 'https://game.peteshepley.com/hearts/',
+    tags: ['typescript', 'react', 'websockets'],
+    howToExamine: 'Create a room and share the code with three friends; the game starts when the fourth joins.',
+  },
+  {
     name: 'API Console',
     kind: 'code',
     description: "A signed-in API test console for peteshepley.com's APIs — pick an API from the dropdown, browse its OpenAPI documentation, and try live requests against your own data. React, TypeScript, and Vite, authenticated with Clerk.",
