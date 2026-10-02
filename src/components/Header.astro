@@ -1,9 +1,11 @@
 ---
 const navItems = [
   { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/games', label: 'Games' },
   { href: '/blog', label: 'Blog' },
   { href: '/api-docs', label: 'API Docs' },
+  { href: '/about', label: 'About' },
 ];
 ---
 
@@ -42,7 +44,8 @@ const navItems = [
 
   .links {
     display: flex;
-    gap: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
   }
 
   .links a {

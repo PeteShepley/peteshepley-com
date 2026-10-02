@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { projects, projectKinds } from '../data/projects';
+
+const groups = projectKinds
+  .map(({ kind, label }) => ({ label, items: projects.filter((p) => p.kind === kind) }))
+  .filter((group) => group.items.length > 0);
+---
+
+<Layout title="Portfolio" description="Projects Pete Shepley has built: code, home lab, and papers.">
+  <h1>Portfolio</h1>
+  <p class="muted">Things I'm building or have built. Some are finished, some are ongoing.</p>
+
+  {groups.map((group) => (
+    <section>
+      {groups.length > 1 && <h2 class="group">{group.label}</h2>}
+      <ul class="project-list">
+        {group.items.map((project) => (
+          <li>
+            <h3><a href={project.url}>{project.name}</a></h3>
+            <p>{project.description}</p>
+            {project.howToExamine && <p class="examine">{project.howToExamine}</p>}
+            <p class="tags muted">{project.tags.join(' · ')}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Layout>
+
+<style>
+  .group {
+    margin-top: 2rem;
+  }
+
+  .project-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .project-list li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .project-list li:last-child {
+    border-bottom: none;
+  }
+
+  .project-list h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.1rem;
+  }
+
+  .project-list p {
+    margin: 0.4rem 0;
+  }
+
+  .examine {
+    font-style: italic;
+  }
+
+  .tags {
+    font-size: 0.85rem;
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import games from '../data/games.json';
+---
+
+<Layout title="Games" description="Browser games by Pete Shepley, playable at game.peteshepley.com.">
+  <h1>Games</h1>
+  <p class="muted">
+    Games I've built, playable in the browser at{' '}
+    <a href="https://game.peteshepley.com/gin-rummy/">game.peteshepley.com</a>.
+  </p>
+
+  <ul class="game-list">
+    {games.map((game) => (
+      <li>
+        <h2><a href={game.url}>{game.name}</a></h2>
+        <p class="muted">{game.players}</p>
+        <p>{game.description}</p>
+        <p class="links muted">
+          <a href={game.url}>Play</a>
+          {' · '}
+          <a href={game.repoUrl}>Source</a>
+        </p>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  .game-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .game-list li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .game-list li:last-child {
+    border-bottom: none;
+  }
+
+  .game-list h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.1rem;
+  }
+
+  .game-list p {
+    margin: 0.4rem 0;
+  }
+
+  .links {
+    font-size: 0.9rem;
+  }
+</style>

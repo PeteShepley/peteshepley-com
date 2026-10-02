@@ -8,6 +8,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice(0, 3);
 
 const featuredProjects = projects.slice(0, 2);
+
+const domains = [
+  { href: 'https://app.peteshepley.com/resume/', host: 'app.peteshepley.com', what: 'Apps — start with the Resume App' },
+  { href: 'https://game.peteshepley.com/gin-rummy/', host: 'game.peteshepley.com', what: 'Games — card games you can play with a friend' },
+  { href: '/api-docs', host: 'api.peteshepley.com', what: 'APIs — documented with OpenAPI' },
+];
 ---
 
 <Layout>
@@ -29,7 +35,19 @@ const featuredProjects = projects.slice(0, 2);
         </li>
       ))}
     </ul>
-    <p><a href="/projects">All projects &rarr;</a></p>
+    <p><a href="/portfolio">Full portfolio &rarr;</a></p>
+  </section>
+
+  <section>
+    <h2>Around the site</h2>
+    <ul class="plain-list">
+      {domains.map((domain) => (
+        <li>
+          <a href={domain.href}>{domain.host}</a>
+          <p class="muted">{domain.what}</p>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <section>

@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// TODO(pete): add LinkedIn and any other profiles.
+const elsewhere = [
+  { href: 'https://github.com/PeteShepley', label: 'GitHub' },
+];
+---
+
+<Layout title="About" description="About Pete Shepley.">
+  <h1>About</h1>
+  <p>
+    I'm Pete Shepley, a software engineer. This site is where I write about what I'm
+    building and where the things I build live: apps, games, APIs, and the
+    infrastructure that runs them.
+  </p>
+
+  <h2>Elsewhere</h2>
+  <ul>
+    {elsewhere.map((link) => (
+      <li><a href={link.href}>{link.label}</a></li>
+    ))}
+  </ul>
+</Layout>
