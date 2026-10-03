@@ -30,5 +30,13 @@
     "players": "4 players, 2 teams",
     "url": "https://game.peteshepley.com/spades/",
     "repoUrl": "https://github.com/PeteShepley/card-games/tree/main/games/spades"
+  },
+  {
+    "id": "solitaire",
+    "name": "Solitaire",
+    "description": "Klondike, the one everyone knows: build the four foundations up from the aces while you dig through seven columns built down in alternating colours. Draw one or three, undo freely, and pick up where you left off — every deal has a number you can share.",
+    "players": "1 player",
+    "url": "https://game.peteshepley.com/solitaire/",
+    "repoUrl": "https://github.com/PeteShepley/card-games/tree/main/games/solitaire"
   }
 ]

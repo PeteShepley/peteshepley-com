@@ -73,6 +73,14 @@ export const projects: Project[] = [
     howToExamine: 'Gather four players in a room; the first and third to join are partners against the second and fourth.',
   },
   {
+    name: 'Solitaire',
+    kind: 'code',
+    description: 'Klondike on the shared card kit, with no server at all: because the game is a pure function of its seed and move log, undo, saved games and shareable deal links come almost for free.',
+    url: 'https://game.peteshepley.com/solitaire/',
+    tags: ['typescript', 'react'],
+    howToExamine: 'Play a deal, then use Deal # to copy a link that replays the exact same deal elsewhere.',
+  },
+  {
     name: 'API Console',
     kind: 'code',
     description: "A signed-in API test console for peteshepley.com's APIs — pick an API from the dropdown, browse its OpenAPI documentation, and try live requests against your own data. React, TypeScript, and Vite, authenticated with Clerk.",
